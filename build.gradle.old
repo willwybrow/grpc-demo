@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.google.protobuf' version "0.8.5"
+    id 'idea'
+    id 'maven'
+}
+
+apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.5.1-1"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.12.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+    generatedFilesBaseDir = "$projectDir/gen"
+}
+
+clean {
+    delete protobuf.generatedFilesBaseDir
+}
+
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    //compile 'com.nulab-inc:zxcvbn:1.2.5'
+    compileClasspath 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
+}
+
+sourceSets {
+    main {
+        proto {
+            // In addition to the default 'src/main/proto'
+            srcDir 'src/main/proto/'
+        }
+        java {
+
+        }
+    }
+    test {
+        proto {
+
+        }
+    }
+}
